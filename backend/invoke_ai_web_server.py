@@ -545,7 +545,7 @@ class InvokeAIWebServer:
                 )
                 eventlet.sleep(0)
 
-            def image_done(image, seed, first_seed):
+            def image_done(image, seed, first_seed, **kwargs):
                 if self.canceled.is_set():
                     raise CanceledException
 
@@ -642,6 +642,9 @@ class InvokeAIWebServer:
                 if 'init_mask' in all_parameters:
                     all_parameters['init_mask'] = mask_img_url
 
+                all_parameters["current_iteration"] = kwargs.get('current_iteration', None)
+                all_parameters["current_sampler"] = kwargs.get('current_sampler', None)
+
                 metadata = self.parameters_to_generated_image_metadata(
                     all_parameters
                 )
@@ -711,6 +714,10 @@ class InvokeAIWebServer:
                 'type',
                 'postprocessing',
                 'sampler',
+                'samplers',
+                'current_sampler',
+                'current_iteration',
+                'iterations',
                 'prompt',
                 'seed',
                 'variations',
@@ -758,7 +765,11 @@ class InvokeAIWebServer:
             )
 
             # semantic drift
-            rfc_dict['sampler'] = parameters['sampler_name']
+            rfc_dict['sampler'] = parameters['current_sampler'] if 'current_sampler' in parameters else parameters['sampler_name']
+
+            rfc_dict['samplers'] = parameters['sampler_names']
+
+            
 
             # display weighted subprompts (liable to change)
             subprompts = split_weighted_subprompts(parameters['prompt'])
@@ -795,6 +806,8 @@ class InvokeAIWebServer:
                     ]  # TODO: Noncompliant
             else:
                 rfc_dict['type'] = 'txt2img'
+
+
 
             metadata['image'] = rfc_dict
 

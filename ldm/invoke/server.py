@@ -10,6 +10,7 @@ from ldm.invoke.pngwriter import PngWriter
 from threading import Event
 
 def build_opt(post_data, seed, gfpgan_model_exists):
+    print("in build_opt")
     opt = Args()
     opt.parse_args()  # initialize defaults
     setattr(opt, 'prompt', post_data['prompt'])
@@ -25,6 +26,7 @@ def build_opt(post_data, seed, gfpgan_model_exists):
     setattr(opt, 'invert_mask', 'invert_mask' in post_data)
     setattr(opt, 'cfg_scale', float(post_data['cfg_scale']))
     setattr(opt, 'sampler_name', post_data['sampler_name'])
+    
 
     # embiggen not practical at this point because we have no way of feeding images back into img2img
     # however, this code is here against that eventuality

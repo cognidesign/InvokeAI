@@ -4,6 +4,7 @@ import MainIterations from './MainIterations';
 import MainSampler from './MainSampler';
 import MainSteps from './MainSteps';
 import MainWidth from './MainWidth';
+import MainMultiSampler from './MainMultiSampler';
 
 export const fontSize = '0.9rem';
 export const inputWidth = 'auto';
@@ -21,6 +22,9 @@ export default function MainOptions() {
           <MainWidth />
           <MainHeight />
           <MainSampler />
+        </div>
+        <div className="main-options-row">
+          <MainMultiSampler />
         </div>
       </div>
     </div>

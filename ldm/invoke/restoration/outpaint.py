@@ -21,6 +21,7 @@ class Outpaint(object):
             prompt,
             seed           = seed,
             sampler        = self.generate.sampler,
+            
             steps          = opt.steps,
             cfg_scale      = opt.cfg_scale,
             ddim_eta       = self.generate.ddim_eta,

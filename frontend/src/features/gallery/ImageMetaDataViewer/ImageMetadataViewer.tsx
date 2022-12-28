@@ -110,6 +110,7 @@ const ImageMetadataViewer = memo(
       type,
       postprocessing,
       sampler,
+
       prompt,
       seed,
       variations,
@@ -187,6 +188,7 @@ const ImageMetadataViewer = memo(
                   onClick={() => dispatch(setSampler(sampler))}
                 />
               )}
+
               {steps && (
                 <MetadataItem
                   label="Steps"

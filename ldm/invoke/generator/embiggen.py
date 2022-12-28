@@ -21,6 +21,9 @@ class Embiggen(Generator):
     def generate(self,prompt,iterations=1,seed=None,
                  image_callback=None, step_callback=None,
                  **kwargs):
+        print("in embiggen.generate")
+        print(image_callback)
+        print(step_callback)
         scope      = choose_autocast(self.precision)
         make_image = self.get_make_image(
             prompt,

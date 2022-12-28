@@ -13,12 +13,14 @@ class Img2Img(Generator):
         super().__init__(model, precision)
         self.init_latent         = None    # by get_noise()
 
-    def get_make_image(self,prompt,sampler,steps,cfg_scale,ddim_eta,
+    def get_make_image(self,prompt,sampler, steps,cfg_scale,ddim_eta,
                        conditioning,init_image,strength,step_callback=None,threshold=0.0,perlin=0.0,**kwargs):
         """
         Returns a function returning an image derived from the prompt and the initial image
         Return value depends on the seed at the time you call it.
         """
+        print("in get_make_image")
+        print("sampler",sampler)
         self.perlin = perlin
 
         sampler.make_schedule(

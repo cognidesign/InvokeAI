@@ -16,7 +16,7 @@ class Inpaint(Img2Img):
         super().__init__(model, precision)
 
     @torch.no_grad()
-    def get_make_image(self,prompt,sampler,steps,cfg_scale,ddim_eta,
+    def get_make_image(self,prompt,sampler, steps,cfg_scale,ddim_eta,
                        conditioning,init_image,mask_image,strength,
                        step_callback=None,**kwargs):
         """

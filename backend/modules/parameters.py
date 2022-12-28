@@ -18,6 +18,9 @@ def parameters_to_command(params):
     Converts dict of parameters into a `invoke.py` REPL command.
     """
 
+    print("in parameters_to_command")
+    print(params)
+
     switches = list()
 
     if "prompt" in params:

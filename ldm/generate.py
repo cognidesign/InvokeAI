@@ -112,6 +112,7 @@ class Generate:
             conf                  = 'configs/models.yaml',
             embedding_path        = None,
             sampler_name          = 'k_lms',
+            sampler_names              = [],
             ddim_eta              = 0.0,  # deterministic
             full_precision        = False,
             precision             = 'auto',
@@ -133,6 +134,8 @@ class Generate:
         self.steps          = 50
         self.cfg_scale      = 7.5
         self.sampler_name   = sampler_name
+        self.sampler_names       = sampler_names
+
         self.ddim_eta       = 0.0    # same seed always produces same image
         self.precision      = precision
         self.strength       = 0.75
@@ -140,6 +143,8 @@ class Generate:
         self.embedding_path = embedding_path
         self.model          = None     # empty for now
         self.sampler        = None
+        self.samplers       = None
+        
         self.device         = None
         self.session_peakmem = None
         self.generators     = {}
@@ -172,6 +177,7 @@ class Generate:
         logging.getLogger('pytorch_lightning').setLevel(logging.ERROR)
 
     def prompt2png(self, prompt, outdir, **kwargs):
+        print("in prompt2png")
         """
         Takes a prompt and an output directory, writes out the requested number
         of PNG files, and returns an array of [[filename,seed],[filename,seed]...]
@@ -189,10 +195,12 @@ class Generate:
         return outputs
 
     def txt2img(self, prompt, **kwargs):
+        print("in txt2img")
         outdir = kwargs.pop('outdir', 'outputs/img-samples')
         return self.prompt2png(prompt, outdir, **kwargs)
 
     def img2img(self, prompt, **kwargs):
+        print("in img2img")
         outdir = kwargs.pop('outdir', 'outputs/img-samples')
         assert (
             'init_img' in kwargs
@@ -214,6 +222,7 @@ class Generate:
             width            = None,
             height           = None,
             sampler_name     = None,
+            sampler_names         = [],
             seamless         = False,
             log_tokenization = False,
             with_variations  = None,
@@ -240,6 +249,7 @@ class Generate:
             hires_fix        = False,
             **args,
     ):   # eat up additional cruft
+        print('In prompt2image')
         """
         ldm.generate.prompt2image() is the common entry point for txt2img() and img2img()
         It takes the following arguments:
@@ -331,6 +341,12 @@ class Generate:
             self.sampler_name = sampler_name
             self._set_sampler()
 
+        if sampler_names and (sampler_names != self.sampler_names):
+            self.sampler_names = sampler_names
+            self._set_samplers()
+
+        
+
         tic = time.time()
         if self._has_cuda():
             torch.cuda.reset_peak_memory_stats()
@@ -372,6 +388,9 @@ class Generate:
                 iterations=iterations,
                 seed=self.seed,
                 sampler=self.sampler,
+                samplers=self.samplers,
+                sampler_name=self.sampler_name,
+                sampler_names=self.sampler_names,
                 steps=steps,
                 cfg_scale=cfg_scale,
                 conditioning=(uc, c),
@@ -525,6 +544,7 @@ class Generate:
             generator.generate(
                 prompt,
                 sampler     = self.sampler,
+                samplers    = self.samplers,
                 steps       = opt.steps,
                 cfg_scale   = opt.cfg_scale,
                 ddim_eta    = self.ddim_eta,
@@ -653,6 +673,9 @@ class Generate:
                 raise SystemExit from e
 
             self._set_sampler()
+            self._set_samplers()
+
+            
 
             for m in self.model.modules():
                 if isinstance(m, (nn.Conv2d, nn.ConvTranspose2d)):
@@ -732,6 +755,40 @@ class Generate:
     # to help WebGUI - front end to generator util function
     def sample_to_image(self, samples):
         return self._make_base().sample_to_image(samples)
+
+
+    def _set_samplers(self):
+        samplers = []
+        msg = f'>> Setting Samplers to {self.sampler_names}'
+        for sampler_name in self.sampler_names:
+            if sampler_name == 'plms':
+                samplers.append(PLMSSampler(self.model, device=self.device))
+            elif sampler_name == 'ddim':
+                samplers.append(DDIMSampler(self.model, device=self.device))
+            elif sampler_name == 'k_dpm_2_a':
+                samplers.append(KSampler(
+                    self.model, 'dpm_2_ancestral', device=self.device
+                ))
+            elif sampler_name == 'k_dpm_2':
+                samplers.append(KSampler(self.model, 'dpm_2', device=self.device))
+            elif sampler_name == 'k_euler_a':
+                samplers.append(KSampler(
+                    self.model, 'euler_ancestral', device=self.device
+                ))
+            elif sampler_name == 'k_euler':
+                samplers.append(KSampler(self.model, 'euler', device=self.device))
+            elif sampler_name == 'k_heun':
+                samplers.append(KSampler(self.model, 'heun', device=self.device))
+            elif sampler_name == 'k_lms':
+                samplers.append(KSampler(self.model, 'lms', device=self.device))
+            else:
+                msg = f'>> Unsupported Sampler: {self.sampler_name}, Defaulting to plms'
+                samplers.append(PLMSSampler(self.model, device=self.device))
+        
+        self.samplers = samplers
+
+        print(msg)
+
 
     def _set_sampler(self):
         msg = f'>> Setting Sampler to {self.sampler_name}'

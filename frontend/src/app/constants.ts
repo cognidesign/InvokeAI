@@ -41,6 +41,7 @@ export const PARAMETERS: { [key: string]: string } = {
   height: 'Height',
   width: 'Width',
   sampler: 'Sampler',
+  samplers: 'Samplers',
   seed: 'Seed',
   img2imgStrength: 'img2img Strength',
   gfpganStrength: 'GFPGAN Strength',

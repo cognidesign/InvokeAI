@@ -27,6 +27,7 @@ export const frontendToBackendParameters = (
     height,
     width,
     sampler,
+    samplers,
     seed,
     seamless,
     shouldUseInitImage,
@@ -57,6 +58,7 @@ export const frontendToBackendParameters = (
     height,
     width,
     sampler_name: sampler,
+    sampler_names: samplers,
     seed,
     seamless,
     progress_images: shouldDisplayInProgress,
@@ -121,6 +123,7 @@ export const backendToFrontendParameters = (parameters: {
     height,
     width,
     sampler_name,
+
     seed,
     seamless,
     progress_images,
@@ -183,6 +186,7 @@ export const backendToFrontendParameters = (parameters: {
     options.height = height;
     options.width = width;
     options.sampler = sampler_name;
+
     options.seed = seed;
     options.seamless = seamless;
   }

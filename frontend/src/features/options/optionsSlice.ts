@@ -14,6 +14,7 @@ export interface OptionsState {
   height: number;
   width: number;
   sampler: string;
+  samplers: string[];
   threshold: number;
   perlin: number;
   seed: number;
@@ -46,6 +47,7 @@ const initialOptionsState: OptionsState = {
   height: 512,
   width: 512,
   sampler: 'k_lms',
+  samplers: [],
   threshold: 0,
   perlin: 0,
   seed: 0,
@@ -107,6 +109,9 @@ export const optionsSlice = createSlice({
     },
     setSampler: (state, action: PayloadAction<string>) => {
       state.sampler = action.payload;
+    },
+    setSamplers: (state, action: PayloadAction<string[]>) => {
+      state.samplers = action.payload;
     },
     setSeed: (state, action: PayloadAction<number>) => {
       state.seed = action.payload;
@@ -172,6 +177,7 @@ export const optionsSlice = createSlice({
       const {
         type,
         sampler,
+        samplers,
         prompt,
         seed,
         variations,
@@ -249,12 +255,14 @@ export const optionsSlice = createSlice({
 
       if (prompt) state.prompt = promptToString(prompt);
       if (sampler) state.sampler = sampler;
+      if (samplers) state.samplers = samplers;
+
       if (steps) state.steps = steps;
       if (cfg_scale) state.cfgScale = cfg_scale;
       if (threshold) state.threshold = threshold;
       if (typeof threshold === 'undefined') state.threshold = 0;
       if (perlin) state.perlin = perlin;
-      if (typeof perlin === 'undefined') state.perlin = 0;      
+      if (typeof perlin === 'undefined') state.perlin = 0;
       if (typeof seamless === 'boolean') state.seamless = seamless;
       if (width) state.width = width;
       if (height) state.height = height;
@@ -299,6 +307,7 @@ export const {
   setHeight,
   setWidth,
   setSampler,
+  setSamplers,
   setSeed,
   setSeamless,
   setImg2imgStrength,

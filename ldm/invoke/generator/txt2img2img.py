@@ -15,7 +15,7 @@ class Txt2Img2Img(Generator):
         self.init_latent = None    # for get_noise()
 
     @torch.no_grad()
-    def get_make_image(self,prompt,sampler,steps,cfg_scale,ddim_eta,
+    def get_make_image(self,prompt,sampler, steps,cfg_scale,ddim_eta,
                        conditioning,width,height,strength,step_callback=None,**kwargs):
         """
         Returns a function returning an image derived from the prompt and the initial image

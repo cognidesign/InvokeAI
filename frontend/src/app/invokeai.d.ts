@@ -47,6 +47,7 @@ export declare type CommonGeneratedImageMetadata = {
     | 'k_heun'
     | 'k_lms'
     | 'plms';
+
   prompt: Prompt;
   seed: number;
   variations: SeedWeights;

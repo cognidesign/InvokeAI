@@ -199,3 +199,6 @@ models/ldm/stable-diffusion-v1/model.sha256
 
 # GFPGAN model files
 gfpgan/
+stable-diffusion-v1-5/
+video_test/
+*.ckpt

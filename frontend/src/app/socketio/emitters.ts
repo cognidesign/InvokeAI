@@ -24,11 +24,15 @@ const makeSocketIOEmitters = (
     emitGenerateImage: () => {
       dispatch(setIsProcessing(true));
 
+      console.log('state', getState());
+
       const options = { ...getState().options };
 
       if (tabMap[options.activeTab] === 'txt2img') {
         options.shouldUseInitImage = false;
       }
+
+      console.log('options', options);
 
       const { generationParameters, esrganParameters, gfpganParameters } =
         frontendToBackendParameters(options, getState().system);

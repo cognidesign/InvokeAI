@@ -374,6 +374,7 @@ class GeneratorService:
           gfpgan_strength  = gfpgan_strength,
           upscale          = upscale,
           sampler_name     = jobRequest.sampler_name,
+          
           seamless         = jobRequest.seamless,
           embiggen         = jobRequest.embiggen,
           embiggen_tiles   = jobRequest.embiggen_tiles,

@@ -42,6 +42,9 @@ class Generator():
     def generate(self,prompt,init_image,width,height,iterations=1,seed=None,
                  image_callback=None, step_callback=None, threshold=0.0, perlin=0.0,
                  **kwargs):
+        print("in generate")
+        print("step_callback", step_callback)
+        print("kwargs", kwargs)
         scope = choose_autocast(self.precision)
         make_image          = self.get_make_image(
             prompt,
@@ -74,11 +77,25 @@ class Generator():
                         x_T = self.get_noise(width,height)
                     except:
                         pass
-
+                newKwargs = kwargs.copy()
+                if kwargs.get("samplers",None) is not None:
+                    if (n < len(kwargs["samplers"])):
+                       newKwargs["sampler"] = kwargs["samplers"][n]
+                       newKwargs["sampler_name"] = kwargs["sampler_names"][n]
+                make_image          = self.get_make_image(
+                    prompt,
+                    init_image    = init_image,
+                    width         = width,
+                    height        = height,
+                    step_callback = step_callback,
+                    threshold     = threshold,
+                    perlin        = perlin,
+                    **newKwargs
+                )
                 image = make_image(x_T)
                 results.append([image, seed])
                 if image_callback is not None:
-                    image_callback(image, seed, first_seed=first_seed)
+                    image_callback(image, seed, first_seed=first_seed, current_iteration=n, current_sampler=newKwargs.get("sampler_name",None))
                 seed = self.new_seed()
         return results
     

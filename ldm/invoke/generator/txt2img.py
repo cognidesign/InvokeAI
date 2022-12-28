@@ -11,13 +11,15 @@ class Txt2Img(Generator):
         super().__init__(model, precision)
 
     @torch.no_grad()
-    def get_make_image(self,prompt,sampler,steps,cfg_scale,ddim_eta,
+    def get_make_image(self,prompt,sampler, steps,cfg_scale,ddim_eta,
                        conditioning,width,height,step_callback=None,threshold=0.0,perlin=0.0,**kwargs):
         """
         Returns a function returning an image derived from the prompt and the initial image
         Return value depends on the seed at the time you call it
         kwargs are 'width' and 'height'
         """
+        print("in get_make_image")
+        print("sampler",sampler)
         self.perlin = perlin
         uc, c   = conditioning
 

@@ -481,6 +481,7 @@ def parameters_to_generated_image_metadata(parameters):
         "type",
         "postprocessing",
         "sampler",
+        
         "prompt",
         "seed",
         "variations",
@@ -524,6 +525,7 @@ def parameters_to_generated_image_metadata(parameters):
 
     # semantic drift
     rfc_dict["sampler"] = parameters["sampler_name"]
+    
 
     # display weighted subprompts (liable to change)
     subprompts = split_weighted_subprompts(parameters["prompt"])
@@ -547,6 +549,7 @@ def parameters_to_generated_image_metadata(parameters):
         rfc_dict["orig_hash"] = calculate_init_img_hash(parameters["init_img"])
         rfc_dict["init_image_path"] = parameters["init_img"]  # TODO: Noncompliant
         rfc_dict["sampler"] = "ddim"  # TODO: FIX ME WHEN IMG2IMG SUPPORTS ALL SAMPLERS
+        
         if "init_mask" in parameters:
             rfc_dict["mask_hash"] = calculate_init_img_hash(
                 parameters["init_mask"]

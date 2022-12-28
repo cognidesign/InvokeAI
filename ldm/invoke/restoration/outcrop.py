@@ -24,6 +24,7 @@ class Outcrop(object):
 
         # switch samplers temporarily
         curr_sampler = self.generate.sampler
+        
         self.generate.sampler_name = opt.sampler_name
         self.generate._set_sampler()
 
@@ -34,6 +35,7 @@ class Outcrop(object):
             orig_opt.prompt,
 #            seed        = orig_opt.seed,    # uncomment to make it deterministic
             sampler     = self.generate.sampler,
+        
             steps       = opt.steps,
             cfg_scale   = opt.cfg_scale,
             ddim_eta    = self.generate.ddim_eta,
@@ -46,6 +48,7 @@ class Outcrop(object):
         
         # swap sampler back
         self.generate.sampler = curr_sampler
+        
         return result
 
     def _extend_all(
