@@ -202,3 +202,4 @@ gfpgan/
 stable-diffusion-v1-5/
 video_test/
 *.ckpt
+*.pth
